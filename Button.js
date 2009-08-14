@@ -1,18 +1,24 @@
 /**
- * @class Ext.ux.ExportButton
+ * @class Ext.ux.Exporter.Button
  * @extends Ext.Button
  * @author Nige White, with modifications from Ed Spencer
  * Specialised Button class that allows downloading of data via data: urls.
  * Internally, this is just a link.
  * Pass it either an Ext.Component subclass with a 'store' property, or just a store:
- * new Ext.ux.ExportButton({component: someGrid});
- * new Ext.ux.ExportButton({store: someStore});
+ * new Ext.ux.Exporter.Button({component: someGrid});
+ * new Ext.ux.Exporter.Button({store: someStore});
  * @cfg {Ext.Component} component The component the store is bound to
  * @cfg {Ext.data.Store} store The store to export (alternatively, pass a component with a store property)
  */
-Ext.ux.ExportButton = Ext.extend(Ext.Button, {
+Ext.ux.Exporter.Button = Ext.extend(Ext.Button, {
   constructor: function(config) {
     config = config || {};
+    
+    Ext.applyIf(config, {
+      exportFunction: 'exportGrid',
+      disabled      : true,
+      cls           : 'download'
+    });
     
     if (config.store == undefined && config.component != undefined) {
       Ext.applyIf(config, {
@@ -26,12 +32,14 @@ Ext.ux.ExportButton = Ext.extend(Ext.Button, {
       });      
     }
     
-    Ext.ux.ExportButton.superclass.constructor.call(this, config);
+    Ext.ux.Exporter.Button.superclass.constructor.call(this, config);
     
     if (this.store && Ext.isFunction(this.store.on)) {
       this.store.on('load', function(store, records) {
         var setLink = function() {
-          this.getEl().child('a', true).href = 'data:application/vnd.ms-excel;base64,' + Ext.ux.Exporter.exportGrid(this.component);
+          this.getEl().child('a', true).href = 'data:application/vnd.ms-excel;base64,' + Ext.ux.Exporter[config.exportFunction](this.component, null, config);
+          
+          this.enable();
         };
         
         if (this.el) {
@@ -74,4 +82,4 @@ Ext.ux.ExportButton = Ext.extend(Ext.Button, {
     }
 });
 
-Ext.reg('exportbutton', Ext.ux.ExportButton);
+Ext.reg('exportbutton', Ext.ux.Exporter.Button);

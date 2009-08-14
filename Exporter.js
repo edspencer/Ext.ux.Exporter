@@ -15,13 +15,24 @@ Ext.ux.Exporter = function() {
       formatter = formatter || new Ext.ux.Exporter.ExcelFormatter();
       
       Ext.applyIf(config, {
-        title: grid.title,
+        title  : grid.title,
         columns: grid.getColumnModel().config
       });
       
-      // Base64.encode(formatter.format(grid.store, {title: this.title}));
-      
       return Base64.encode(formatter.format(grid.store, config));
+    },
+    
+    exportTree: function(tree, formatter, config) {
+      config    = config || {};
+      formatter = formatter || new Ext.ux.Exporter.ExcelFormatter();
+      
+      var store = tree.store || config.store;
+
+      Ext.applyIf(config, {
+        title: tree.title
+      });
+      
+      return Base64.encode(formatter.format(store, config));
     }
   };
 }();
