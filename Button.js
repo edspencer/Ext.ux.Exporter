@@ -17,6 +17,7 @@ Ext.ux.Exporter.Button = Ext.extend(Ext.Button, {
     Ext.applyIf(config, {
       exportFunction: 'exportGrid',
       disabled      : true,
+      text          : 'Download',
       cls           : 'download'
     });
     

@@ -16,7 +16,8 @@ Ext.ux.Exporter.ExcelFormatter.Worksheet = Ext.extend(Object, {
       hasHeadings: true,
       stripeRows : true,
       
-      columns    : store.fields.items
+      title      : "Workbook",
+      columns    : store.fields == undefined ? {} : store.fields.items
     });
     
     Ext.apply(this, config);
@@ -115,7 +116,15 @@ Ext.ux.Exporter.ExcelFormatter.Worksheet = Ext.extend(Object, {
     var cells = [];
     
     Ext.each(this.columns, function(col) {
-      var title = col.header || col.name;
+      var title;
+      
+      if (col.header != undefined) {
+        title = col.header;
+      } else {
+        //make columns taken from Record fields (e.g. with a col.name) human-readable
+        title = col.name.replace(/_/g, " ");
+        title = title.charAt(0).toUpperCase() + title.substr(1).toLowerCase();
+      }
       
       cells.push(String.format('<ss:Cell ss:StyleID="headercell"><ss:Data ss:Type="String">{0}</ss:Data><ss:NamedCell ss:Name="Print_Titles" /></ss:Cell>', title));
     }, this);

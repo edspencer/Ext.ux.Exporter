@@ -22,6 +22,17 @@ Ext.ux.Exporter = function() {
       return Base64.encode(formatter.format(grid.store, config));
     },
     
+    exportStore: function(store, formatter, config) {
+       config = config || {};
+       formatter = formatter || new Ext.ux.Exporter.ExcelFormatter();
+
+       Ext.applyIf(config, {
+         columns: config.store.fields.items
+       });
+       
+       return Base64.encode(formatter.format(store, config));
+    },
+    
     exportTree: function(tree, formatter, config) {
       config    = config || {};
       formatter = formatter || new Ext.ux.Exporter.ExcelFormatter();
