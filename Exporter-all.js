@@ -147,25 +147,25 @@ Ext.ux.Exporter.Button = Ext.extend(Ext.Button, {
         component: {
           store: config.store
         }
-      });      
+      });
     }
     
     Ext.ux.Exporter.Button.superclass.constructor.call(this, config);
     
     if (this.store && Ext.isFunction(this.store.on)) {
-      this.store.on('load', function(store, records) {
-        var setLink = function() {
-          this.getEl().child('a', true).href = 'data:application/vnd.ms-excel;base64,' + Ext.ux.Exporter[config.exportFunction](this.component, null, config);
-          
-          this.enable();
-        };
+      var setLink = function() {
+        this.getEl().child('a', true).href = 'data:application/vnd.ms-excel;base64,' + Ext.ux.Exporter[config.exportFunction](this.component, null, config);
         
-        if (this.el) {
-          setLink.call(this);
-        } else {
-          this.on('render', setLink, this);
-        }
-      }, this);
+        this.enable();
+      };
+      
+      if (this.el) {
+        setLink.call(this);
+      } else {
+        this.on('render', setLink, this);
+      }
+      
+      this.store.on('load', setLink, this);
     }
   },
   

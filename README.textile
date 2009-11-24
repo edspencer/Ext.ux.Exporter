@@ -1,0 +1,41 @@
+h1. Ext.ux.Exporter
+
+h2. About
+
+p. Exporter is a generic export class which takes any Ext.data.Store-based component (e.g. grids and similar) and exports the data in any format.
+
+p. Exporter works completely client-side.  It uses a Formatter class to generate a document (.xls, .csv etc) and then redirects the user's browser to a data url so that they can view or download it.
+
+h2. Installation
+
+p. Download the latest version in any of the following ways:
+
+ul.
+  li. git clone git://github.com/edspencer/Ext.ux.Exporter.git
+  li. Download from http://github.com/edspencer/Ext.ux.Exporter/zipball/master
+  li. Copy/paste Exporter-all.js from http://github.com/edspencer/Ext.ux.Exporter/blob/master/Exporter-all.js
+
+p. To install Ext.ux.Exporter, just include Exporter-all.js somewhere on your page:
+
+bc. <script type="text/javascript" src="Exporter-all.js"></script>
+
+h2. Usage
+
+p. The most common use case for the Exporter is exporting a grid to Excel, which is as simple as doing the following:
+
+bc..var grid = new Ext.grid.GridPanel({
+  store: someStore,
+  tbar : [
+    {
+      xtype: 'exportbutton',
+      store: someStore
+    }
+  ],
+  //your normal grid config goes here
+});
+
+p. The provided 'exportbutton' is just a specialised Ext.Button subclass which redirects the user to the generated data url.  If you want to provide your own implementation here, just check out the Button.js code (it's ridiculously simple).
+
+h2. Example
+
+Download or clone the code (see Installation section for details) and then drag the example/index.html file into any browser to see an example of the Exporter at work.
