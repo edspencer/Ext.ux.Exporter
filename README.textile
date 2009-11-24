@@ -22,7 +22,7 @@ h2. Usage
 
 p. The most common use case for the Exporter is exporting a grid to Excel, which is as simple as doing the following:
 
-bc..var grid = new Ext.grid.GridPanel({
+bc.. var grid = new Ext.grid.GridPanel({
   store: someStore,
   tbar : [
     {
