@@ -21,7 +21,7 @@ Ext.ux.Exporter.ExcelFormatter.Cell = Ext.extend(Object, {
   
   tpl: new Ext.XTemplate(
     '<ss:Cell ss:StyleID="{style}">',
-      '<ss:Data ss:Type="{type}">{value}</ss:Data>',
+      '<ss:Data ss:Type="{type}"><![CDATA[{value}]]></ss:Data>',
     '</ss:Cell>'
   )
 });

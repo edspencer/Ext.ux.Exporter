@@ -65,6 +65,7 @@ Ext.ux.Exporter.Button = Ext.extend(Ext.Button, {
         btn = this.template.append(ct, targs, true);
       }
       var btnEl = btn.child("a:first");
+      this.btnEl = btnEl;
       btnEl.on('focus', this.onFocus, this);
       btnEl.on('blur', this.onBlur, this);
 
