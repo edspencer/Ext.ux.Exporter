@@ -1,14 +1,14 @@
 /**
  * @class Ext.ux.Exporter.Button
  * @extends Ext.Button
- * @author Nige White, with modifications from Ed Spencer
+ * @author Nige White, with modifications from Ed Spencer, with modifications from iwiznia.
  * Specialised Button class that allows downloading of data via data: urls.
  * Internally, this is just a link.
- * Pass it either an Ext.Component subclass with a 'store' property, or just a store:
+ * Pass it either an Ext.Component subclass with a 'store' property, or just a store or nothing and it will try to grab the first parent of this button that is a grid or tree panel:
  * new Ext.ux.Exporter.Button({component: someGrid});
  * new Ext.ux.Exporter.Button({store: someStore});
  * @cfg {Ext.Component} component The component the store is bound to
- * @cfg {Ext.data.Store} store The store to export (alternatively, pass a component with a store property)
+ * @cfg {Ext.data.Store} store The store to export (alternatively, pass a component with a getStore method)
  */
 Ext.define("Ext.ux.exporter.Button", {
     extend: "Ext.Button",
@@ -56,5 +56,3 @@ Ext.define("Ext.ux.exporter.Button", {
         }
     }
 });
-
-//Ext.reg('exportbutton', Ext.ux.exporter.Button);

@@ -1,6 +1,6 @@
 /**
  * @class Ext.ux.Exporter
- * @author Ed Spencer (http://edspencer.net)
+ * @author Ed Spencer (http://edspencer.net), with modifications from iwiznia.
  * Class providing a common way of downloading data in .xls or .csv format
  */
 Ext.define("Ext.ux.exporter.Exporter", {
