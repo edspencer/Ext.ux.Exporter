@@ -3,6 +3,6 @@
  * @extends Ext.ux.Exporter.Formatter
  * Specialised Format class for outputting .csv files
  */
-Ext.ux.Exporter.CSVFormatter = Ext.extend(Ext.ux.Exporter.Formatter, {
-  
+Ext.define("Ext.ux.exporter.csvFormatter.CsvFormatter", {
+    extend: "Ext.ux.exporter.Formatter"
 });

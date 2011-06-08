@@ -5,7 +5,7 @@
 *
 **/
 
-var Base64 = (function() {
+(function() {
 
     // private property
     var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -32,12 +32,10 @@ var Base64 = (function() {
         return utftext;
     }
 
-    // public method for encoding
-    return {
+    Ext.define("Ext.ux.exporter.Base64", {
+        statics: {
         //This was the original line, which tries to use Firefox's built in Base64 encoder, but this kept throwing exceptions....
         // encode : (typeof btoa == 'function') ? function(input) { return btoa(input); } : function (input) {
-        
-        
         encode : function (input) {
             var output = "";
             var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
@@ -61,6 +59,6 @@ var Base64 = (function() {
                 keyStr.charAt(enc3) + keyStr.charAt(enc4);
             }
             return output;
-        }
-    };
+        }}
+    });
 })();
