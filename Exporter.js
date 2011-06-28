@@ -32,10 +32,13 @@ Ext.define("Ext.ux.exporter.Exporter", {
         exportGrid: function(grid, formatter, config) {
           config = config || {};
           formatter = formatter || new Ext.ux.exporter.excelFormatter.ExcelFormatter();
+          var columns = Ext.Array.filter(grid.columns, function(col) {
+              return !col.hidden;
+          });
 
           Ext.applyIf(config, {
             title  : grid.title,
-            columns: grid.columns
+            columns: columns
           });
 
           return Ext.ux.exporter.Base64.encode(formatter.format(grid.store, config));

@@ -39,11 +39,19 @@ Ext.define("Ext.ux.exporter.Button", {
         this.component = component;
         this.store = !component.is ? component : component.getStore(); // only components or stores, if it doesn't respond to is method, it's a store
         var setLink = function() {
-          this.el.query('a', true)[0].href = 'data:application/vnd.ms-excel;base64,' + Ext.ux.exporter.Exporter.exportAny(this.component, null, config);
+          var newConf = Ext.clone(config);
+          this.el.query('a', true)[0].href = 'data:application/vnd.ms-excel;base64,' + Ext.ux.exporter.Exporter.exportAny(this.component, null, newConf);
           this.enable();
         };
 
+        var me = this;
         this.store.on("load", setLink, this);
+        if(Ext.ComponentQuery.is(this.component, "gridpanel")) {
+            Ext.Array.each(this.component.columns, function(col) {
+                col.on("show", setLink, me);
+                col.on("hide", setLink, me);
+            });
+        }
     },
 
     onClick : function(e){
