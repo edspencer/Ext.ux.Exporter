@@ -20,6 +20,9 @@ Ext.define("Ext.ux.exporter.Exporter", {
                 func = func + "Grid";
             } else if (component.is("treepanel")) {
                 func = func + "Tree";
+            } else {
+                func = func + "Store";
+                component = component.getStore();
             }
             return this[func](component, formatter, config);
         },
@@ -49,7 +52,7 @@ Ext.define("Ext.ux.exporter.Exporter", {
            formatter = formatter || new Ext.ux.exporter.excelFormatter.ExcelFormatter();
 
            Ext.applyIf(config, {
-             columns: config.store.fields.items
+             columns: store.fields ? store.fields.items : store.model.prototype.fields.items
            });
 
            return Ext.ux.exporter.Base64.encode(formatter.format(store, config));
