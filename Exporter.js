@@ -24,7 +24,8 @@ Ext.define("Ext.ux.exporter.Exporter", {
                 func = func + "Store";
                 component = component.getStore();
             }
-            return this[func](component, formatter, config);
+
+            return this[func](component, this.getFormatterByName(formatter), config);
         },
 
         /**
@@ -34,9 +35,8 @@ Ext.define("Ext.ux.exporter.Exporter", {
          */
         exportGrid: function(grid, formatter, config) {
           config = config || {};
-          formatter = formatter || new Ext.ux.exporter.excelFormatter.ExcelFormatter();
           var columns = Ext.Array.filter(grid.columns, function(col) {
-              return !col.hidden;
+              return !col.hidden; // && (!col.xtype || col.xtype != "actioncolumn");
           });
 
           Ext.applyIf(config, {
@@ -44,7 +44,7 @@ Ext.define("Ext.ux.exporter.Exporter", {
             columns: columns
           });
 
-          return Ext.ux.exporter.Base64.encode(formatter.format(grid.store, config));
+          return formatter.format(grid.store, config);
         },
 
         exportStore: function(store, formatter, config) {
@@ -55,7 +55,7 @@ Ext.define("Ext.ux.exporter.Exporter", {
              columns: store.fields ? store.fields.items : store.model.prototype.fields.items
            });
 
-           return Ext.ux.exporter.Base64.encode(formatter.format(store, config));
+           return formatter.format(store, config);
         },
 
         exportTree: function(tree, formatter, config) {
@@ -68,7 +68,13 @@ Ext.define("Ext.ux.exporter.Exporter", {
             title: tree.title
           });
 
-          return Ext.ux.exporter.Base64.encode(formatter.format(store, config));
+          return formatter.format(store, config);
+        },
+
+        getFormatterByName: function(formatter) {
+            formatter = formatter ? formatter : "excel";
+            formatter = !Ext.isString(formatter) ? formatter : Ext.create("Ext.ux.exporter." + formatter + "Formatter." + Ext.String.capitalize(formatter) + "Formatter");
+            return formatter;
         }
     }
 });

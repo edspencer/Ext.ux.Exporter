@@ -1,6 +1,6 @@
 /**
  * @class Ext.ux.Exporter.Button
- * @extends Ext.Button
+ * @extends Ext.Component
  * @author Nige White, with modifications from Ed Spencer, with modifications from iwiznia.
  * Specialised Button class that allows downloading of data via data: urls.
  * Internally, this is just a link.
@@ -11,25 +11,28 @@
  * @cfg {Ext.data.Store} store The store to export (alternatively, pass a component with a getStore method)
  */
 Ext.define("Ext.ux.exporter.Button", {
-    extend: "Ext.Button",
+    extend: "Ext.Component",
     alias: "widget.exporterbutton",
+    html: '<p></p>',
+    config: {
+        swfPath: '/flash/downloadify.swf',
+        downloadImage: '/images/ext_reports/download.png',
+        width: 62,
+        height: 22,
+        downloadName: "download"
+    },
+
     constructor: function(config) {
       config = config || {};
 
-      Ext.applyIf(config, {
-        disabled      : true,
-        text          : 'Download',
-        cls           : 'download',
-        href          : "/"
-      });
-
+      this.initConfig();
       Ext.ux.exporter.Button.superclass.constructor.call(this, config);
 
       if (this.store || this.component) {
           this.setComponent(this.store || this.component, config);
       } else {
           var self = this;
-          this.on("render", function() { // We wait for the combo to be rendered, so we can look up to grab the component containing it
+          this.on("afterrender", function() { // We wait for the combo to be rendered, so we can look up to grab the component containing it
               self.setComponent(self.up("gridpanel") || self.up("treepanel"), config);
           });
       }
@@ -38,29 +41,25 @@ Ext.define("Ext.ux.exporter.Button", {
     setComponent: function(component, config) {
         this.component = component;
         this.store = !component.is ? component : component.getStore(); // only components or stores, if it doesn't respond to is method, it's a store
-        var setLink = function() {
-          var newConf = Ext.clone(config);
-          this.el.query('a', true)[0].href = 'data:application/vnd.ms-excel;base64,' + Ext.ux.exporter.Exporter.exportAny(this.component, null, newConf);
-          this.enable();
-        };
-
-        var me = this;
-        this.store.on("load", setLink, this);
-        if(Ext.ComponentQuery.is(this.component, "gridpanel")) {
-            Ext.Array.each(this.component.columns, function(col) {
-                col.on("show", setLink, me);
-                col.on("hide", setLink, me);
-            });
-        }
+        this.setDownloadify(config);
     },
 
-    onClick : function(e){
-        if (e.button != 0) return;
-
-        if (!this.disabled){
-          this.fireEvent("click", this, e);
-
-          if (this.handler) this.handler.call(this.scope || this, this, e);
-        }
+    setDownloadify: function(config) {
+        var self = this;
+        Downloadify.create(this.el.down('p').id,{
+            filename: function() {
+              return self.getDownloadName() + "." + Ext.ux.exporter.Exporter.getFormatterByName(self.formatter).extension;
+            },
+            data: function() {
+              return Ext.ux.exporter.Exporter.exportAny(self.component, self.formatter, config);
+            },
+            transparent: false,
+            swf: this.getSwfPath(),
+            downloadImage: this.getDownloadImage(),
+            width: this.getWidth(),
+            height: this.getHeight(),
+            transparent: true,
+            append: false
+        });
     }
 });

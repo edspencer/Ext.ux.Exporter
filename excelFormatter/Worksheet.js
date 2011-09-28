@@ -124,7 +124,7 @@ Ext.define("Ext.ux.exporter.excelFormatter.Worksheet", {
           } else if(col.name) {
             //make columns taken from Record fields (e.g. with a col.name) human-readable
             title = col.name.replace(/_/g, " ");
-            title = title.charAt(0).toUpperCase() + title.substr(1).toLowerCase();
+            title = Ext.String.capitalize(title);
           }
 
           cells.push(Ext.String.format('<ss:Cell ss:StyleID="headercell"><ss:Data ss:Type="String">{0}</ss:Data><ss:NamedCell ss:Name="Print_Titles" /></ss:Cell>', title));

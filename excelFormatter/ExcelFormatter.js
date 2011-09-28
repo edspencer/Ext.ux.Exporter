@@ -11,6 +11,8 @@ Ext.define("Ext.ux.exporter.excelFormatter.ExcelFormatter", {
         "Ext.ux.exporter.excelFormatter.Worksheet",
         "Ext.ux.exporter.excelFormatter.Workbook"
     ],
+    contentType: 'data:application/vnd.ms-excel;base64,',
+    extension: "xls",
 
     format: function(store, config) {
       var workbook = new Ext.ux.exporter.excelFormatter.Workbook(config);
