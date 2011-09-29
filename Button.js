@@ -28,14 +28,10 @@ Ext.define("Ext.ux.exporter.Button", {
       this.initConfig();
       Ext.ux.exporter.Button.superclass.constructor.call(this, config);
 
-      if (this.store || this.component) {
-          this.setComponent(this.store || this.component, config);
-      } else {
-          var self = this;
-          this.on("afterrender", function() { // We wait for the combo to be rendered, so we can look up to grab the component containing it
-              self.setComponent(self.up("gridpanel") || self.up("treepanel"), config);
-          });
-      }
+      var self = this;
+      this.on("afterrender", function() { // We wait for the combo to be rendered, so we can look up to grab the component containing it
+          self.setComponent(self.store || self.component || self.up("gridpanel") || self.up("treepanel"), config);
+      });
     },
 
     setComponent: function(component, config) {
