@@ -35,6 +35,8 @@ Ext.define("Ext.ux.exporter.Exporter", {
          */
         exportGrid: function(grid, formatter, config) {
           config = config || {};
+          formatter = this.getFormatterByName(formatter);
+
           var columns = Ext.Array.filter(grid.columns, function(col) {
               return !col.hidden; // && (!col.xtype || col.xtype != "actioncolumn");
           });
@@ -49,7 +51,7 @@ Ext.define("Ext.ux.exporter.Exporter", {
 
         exportStore: function(store, formatter, config) {
            config = config || {};
-           formatter = formatter || new Ext.ux.exporter.excelFormatter.ExcelFormatter();
+           formatter = this.getFormatterByName(formatter);
 
            Ext.applyIf(config, {
              columns: store.fields ? store.fields.items : store.model.prototype.fields.items
@@ -60,7 +62,7 @@ Ext.define("Ext.ux.exporter.Exporter", {
 
         exportTree: function(tree, formatter, config) {
           config    = config || {};
-          formatter = formatter || new Ext.ux.exporter.excelFormatter.ExcelFormatter();
+          formatter = this.getFormatterByName(formatter);
 
           var store = tree.store || config.store;
 
