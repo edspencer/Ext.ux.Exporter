@@ -89,7 +89,7 @@ Ext.ux.Exporter.ExcelFormatter.Style = Ext.extend(Object, {
       '<tpl if="children.length == 0">',
         '<ss:{name} {propertiesString} />',
       '</tpl>',
-      '<tpl if="children.length > 0">',
+      '<tpl if="children.length != 0">',
         '<ss:{name} {propertiesString}>',
           '<tpl for="children">',
             '<ss:{name} {propertiesString} />',
