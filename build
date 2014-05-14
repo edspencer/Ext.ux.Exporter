@@ -14,8 +14,8 @@ Button.js
 
 Formatter.js
 
-ExcelFormatter/ExcelFormatter.js
-ExcelFormatter/Workbook.js
-ExcelFormatter/Worksheet.js
-ExcelFormatter/Cell.js
-ExcelFormatter/Style.js
+excelFormatter/ExcelFormatter.js
+excelFormatter/Workbook.js
+excelFormatter/Worksheet.js
+excelFormatter/Cell.js
+excelFormatter/Style.js

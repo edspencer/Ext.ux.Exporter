@@ -4,34 +4,34 @@
  * Represents an Excel worksheet
  * @cfg {Ext.data.Store} store The store to use (required)
  */
-Ext.ux.Exporter.ExcelFormatter.Worksheet = Ext.extend(Object, {
+Ext.define("Ext.ux.exporter.excelFormatter.Worksheet", {
 
   constructor: function(store, config) {
     config = config || {};
-    
+
     this.store = store;
-    
+
     Ext.applyIf(config, {
       hasTitle   : true,
       hasHeadings: true,
       stripeRows : true,
-      
+
       title      : "Workbook",
       columns    : store.fields == undefined ? {} : store.fields.items
     });
-    
+
     Ext.apply(this, config);
-    
-    Ext.ux.Exporter.ExcelFormatter.Worksheet.superclass.constructor.apply(this, arguments);
+
+    Ext.ux.exporter.excelFormatter.Worksheet.superclass.constructor.apply(this, arguments);
   },
-  
+
   /**
    * @property dateFormatString
    * @type String
    * String used to format dates (defaults to "Y-m-d"). All other data types are left unmolested
    */
   dateFormatString: "Y-m-d",
-  
+
   worksheetTpl: new Ext.XTemplate(
     '<ss:Worksheet ss:Name="{title}">',
       '<ss:Names>',
@@ -72,7 +72,7 @@ Ext.ux.Exporter.ExcelFormatter.Worksheet = Ext.extend(Object, {
       '</x:WorksheetOptions>',
     '</ss:Worksheet>'
   ),
-  
+
   /**
    * Builds the Worksheet XML
    * @param {Ext.data.Store} store The store to build from
@@ -87,84 +87,88 @@ Ext.ux.Exporter.ExcelFormatter.Worksheet = Ext.extend(Object, {
       title   : this.title
     });
   },
-  
+
   buildColumns: function() {
     var cols = [];
-    
+
     Ext.each(this.columns, function(column) {
       cols.push(this.buildColumn());
     }, this);
-    
+
     return cols;
   },
-  
+
   buildColumn: function(width) {
-    return String.format('<ss:Column ss:AutoFitWidth="1" ss:Width="{0}" />', width || 164);
+    return Ext.String.format('<ss:Column ss:AutoFitWidth="1" ss:Width="{0}" />', width || 164);
   },
-  
+
   buildRows: function() {
     var rows = [];
-    
+
     this.store.each(function(record, index) {
       rows.push(this.buildRow(record, index));
     }, this);
-    
+
     return rows;
   },
-  
+
   buildHeader: function() {
     var cells = [];
-    
+
     Ext.each(this.columns, function(col) {
       var title;
-      
-      if (col.header != undefined) {
-        title = col.header;
-      } else {
-        //make columns taken from Record fields (e.g. with a col.name) human-readable
-        title = col.name.replace(/_/g, " ");
-        title = title.charAt(0).toUpperCase() + title.substr(1).toLowerCase();
-      }
-      
-      cells.push(String.format('<ss:Cell ss:StyleID="headercell"><ss:Data ss:Type="String">{0}</ss:Data><ss:NamedCell ss:Name="Print_Titles" /></ss:Cell>', title));
+
+      //if(col.dataIndex) {
+          if (col.text != undefined) {
+            title = col.text;
+          } else if(col.name) {
+            //make columns taken from Record fields (e.g. with a col.name) human-readable
+            title = col.name.replace(/_/g, " ");
+            title = Ext.String.capitalize(title);
+          }
+
+          cells.push(Ext.String.format('<ss:Cell ss:StyleID="headercell"><ss:Data ss:Type="String">{0}</ss:Data><ss:NamedCell ss:Name="Print_Titles" /></ss:Cell>', title));
+      //}
     }, this);
-    
+
     return cells.join("");
   },
-  
+
   buildRow: function(record, index) {
     var style,
         cells = [];
     if (this.stripeRows === true) style = index % 2 == 0 ? 'even' : 'odd';
-    
+
     Ext.each(this.columns, function(col) {
       var name  = col.name || col.dataIndex;
-      
-      //if given a renderer via a ColumnModel, use it and ensure data type is set to String
-      if (Ext.isFunction(col.renderer)) {
-        var value = col.renderer(record.get(name), null, record),
-            type = "String";
-      } else {
-        var value = record.get(name),
-            type  = this.typeMappings[col.type || record.fields.item(name).type];
+
+      if(name) {
+          //if given a renderer via a ColumnModel, use it and ensure data type is set to String
+          if (Ext.isFunction(col.renderer)) {
+            var value = col.renderer(record.get(name), null, record),
+                type = "String";
+          } else {
+            var value = record.get(name),
+                type  = this.typeMappings[col.type || record.fields.get(name).type.type];
+          }
+
+          cells.push(this.buildCell(value, type, style).render());
       }
-      
-      cells.push(this.buildCell(value, type, style).render());
     }, this);
-    
-    return String.format("<ss:Row>{0}</ss:Row>", cells.join(""));
+
+    return Ext.String.format("<ss:Row>{0}</ss:Row>", cells.join(""));
   },
-  
+
   buildCell: function(value, type, style) {
     if (type == "DateTime" && Ext.isFunction(value.format)) value = value.format(this.dateFormatString);
-    
-    return new Ext.ux.Exporter.ExcelFormatter.Cell({
+
+    return new Ext.ux.exporter.excelFormatter.Cell({
       value: value,
       type : type,
       style: style
     });
   },
-  
+
   /**
    * @property typeMappings
    * @type Object

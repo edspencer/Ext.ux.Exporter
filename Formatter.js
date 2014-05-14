@@ -3,17 +3,16 @@
  * @author Ed Spencer (http://edspencer.net)
  * @cfg {Ext.data.Store} store The store to export
  */
-Ext.ux.Exporter.Formatter = function(config) {
-  config = config || {};
-        
-  Ext.applyIf(config, {
-    
-  });
-};
+Ext.define("Ext.ux.exporter.Formatter", {
+    /**
+     * Performs the actual formatting. This must be overridden by a subclass
+     */
+    format: Ext.emptyFn,
+    constructor: function(config) {
+        config = config || {};
 
-Ext.ux.Exporter.Formatter.prototype = {
-  /**
-   * Performs the actual formatting. This must be overridden by a subclass
-   */
-  format: Ext.emptyFn
-};
+        Ext.applyIf(config, {
+
+        });
+    }
+});
