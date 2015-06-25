@@ -723,7 +723,7 @@ Ext.ux.Exporter.ExcelFormatter.Worksheet = Ext.extend(Object, {
   
   buildCell: function(value, type, style) {
     if (type == "DateTime" && Ext.isFunction(value.format)) value = value.format(this.dateFormatString);
-    
+    value = value.replace(/<|>/g,'');
     return new Ext.ux.Exporter.ExcelFormatter.Cell({
       value: value,
       type : type,
