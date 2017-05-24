@@ -142,10 +142,10 @@ Ext.ux.Exporter.ExcelFormatter.Worksheet = Ext.extend(Object, {
       
       //if given a renderer via a ColumnModel, use it and ensure data type is set to String
       if (Ext.isFunction(col.renderer)) {
-        var value = col.renderer(record.get(name), null, record),
+        var value = col.renderer(this.getValueFromRecord(name, record), null, record),
             type = "String";
       } else {
-        var value = record.get(name),
+        var value = this.getValueFromRecord(name, record),
             type  = this.typeMappings[col.type || record.fields.item(name).type];
       }
       
@@ -175,5 +175,22 @@ Ext.ux.Exporter.ExcelFormatter.Worksheet = Ext.extend(Object, {
     'string': "String",
     'float' : "Number",
     'date'  : "DateTime"
+  },
+  
+  getValueFromRecord: function(dataIndex, record){
+    if(dataIndex && dataIndex.includes(".")){
+      var indexes = dataIndex.split(".");
+      
+      var currentRecord = record.data;
+      for(var i = 0; i < indexes.length; i++){
+        var currentIndex = indexes[i];
+        if(currentIndex && currentRecord){
+          currentRecord = currentRecord[currentIndex];
+        }else{
+          return null;
+      }
+    } else{
+      return record.get(dataIndex);
+    }
   }
 });
