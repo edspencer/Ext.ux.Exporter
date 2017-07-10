@@ -155,7 +155,8 @@ Ext.ux.Exporter.Button = Ext.extend(Ext.Button, {
     if (this.store && Ext.isFunction(this.store.on)) {
       var setLink = function() {
         this.getEl().child('a', true).href = 'data:application/vnd.ms-excel;base64,' + Ext.ux.Exporter[config.exportFunction](this.component, null, config);
-        
+        //Filename (only works on HTML5)
+        this.getEl().child('a', true).download = 'filename.xls' 
         this.enable();
       };
       
